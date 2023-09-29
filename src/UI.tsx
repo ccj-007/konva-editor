@@ -39,8 +39,8 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export default function UI() {
-  const { setDrawSpriteType } = useStore();
-  const drawSpriteType = useStore((state) => state.drawSpriteType);
+  const { setDrawSpriteType, stage, drawSpriteType } = useStore();
+
   const target = useStore((state) => state.target);
 
   const [alignment, setAlignment] = React.useState('left');
@@ -73,6 +73,8 @@ export default function UI() {
       switch (edit) {
         case 'up':
           target.moveToTop();
+          stage?.findOne(`#Transformer${target.attrs.id}`)?.moveToTop();
+          stage?.findOne(`#marquee`)?.moveToTop();
           break;
         case 'down':
           target.moveToBottom();

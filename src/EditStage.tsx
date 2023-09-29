@@ -22,9 +22,7 @@ const initialSprites: ShapeProps[] = [
 ];
 
 const EditStage: React.FC = () => {
-  const drawSpriteType = useStore((state) => state.drawSpriteType);
-  const setDrawSpriteType = useStore((state) => state.setDrawSpriteType);
-  const setTarget = useStore((state) => state.setTarget);
+  const { setStage, setTarget, setDrawSpriteType, drawSpriteType } = useStore();
 
   const [sprites, setSprites] = useState<ShapeProps[]>(initialSprites);
   const [drawing, setDrawing] = useState<boolean>(false);
@@ -139,6 +137,10 @@ const EditStage: React.FC = () => {
     setDrawing(false);
   };
 
+  React.useEffect(() => {
+    setStage(stage.current);
+  }, []);
+
   return (
     <Stage
       width={window.innerWidth}
@@ -169,7 +171,7 @@ const EditStage: React.FC = () => {
           />
         ))}
 
-        <Marquee ref={marquee} {...selObj} />
+        <Marquee id='marquee' ref={marquee} {...selObj} />
       </Layer>
     </Stage>
   );

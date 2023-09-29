@@ -6,6 +6,8 @@ type Store = {
   setDrawSpriteType: (by: SpriteType) => void;
   target: Konva.Node | null;
   setTarget: (by: Konva.Node) => void;
+  stage: Konva.Stage | null;
+  setStage: (by: Konva.Stage) => void;
 };
 
 const useStore = create<Store>()((set) => ({
@@ -13,6 +15,8 @@ const useStore = create<Store>()((set) => ({
   setDrawSpriteType: (by: SpriteType) => set(() => ({ drawSpriteType: by })),
   target: null,
   setTarget: (by: Konva.Node) => set(() => ({ target: by })),
+  stage: null,
+  setStage: (by: Konva.Stage) => set(() => ({ stage: by })),
 }));
 
 export default useStore;

@@ -48,9 +48,10 @@ const EditRectangle: React.FC<{
           ref={shape}
         />
       )}
-      {selectes && (
+      {
         <Transformer
           ref={tr}
+          id={`Transformer${shapeProps.id}`}
           boundBoxFunc={(oldBox, newBox) => {
             // 根据限制精灵过小时编辑框不更新
             if (newBox.width < 5 || newBox.height < 5) {
@@ -59,7 +60,7 @@ const EditRectangle: React.FC<{
             return newBox;
           }}
         />
-      )}
+      }
     </>
   );
 };
