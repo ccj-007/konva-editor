@@ -1,6 +1,6 @@
 import type { FC, Ref } from 'react';
 import { Rect } from 'react-konva';
-import { RectSpriteProps } from './types/sprite';
+import { RectSpriteProps } from '../types/sprite';
 import React from 'react';
 import Konva from 'konva';
 

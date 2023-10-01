@@ -1,7 +1,7 @@
 import Konva from 'konva';
-import React, { Ref } from 'react';
+import React, { MutableRefObject, Ref } from 'react';
 import { Rect } from 'react-konva';
-import { ShapeProps } from './types';
+import { ShapeProps } from '../types/sprite';
 
 /**
  * 矩形精灵
@@ -11,7 +11,7 @@ const RectSprite: React.FC<{
   onSelect: () => void;
   onChange: (newAttrs: ShapeProps) => void;
 }> = React.forwardRef(
-  ({ shapeProps, onSelect, onChange }, shape: Ref<Konva.Rect>) => {
+  ({ shapeProps, onSelect, onChange }, shape: MutableRefObject<Konva.Rect>) => {
     return (
       <Rect
         onClick={onSelect}
@@ -29,6 +29,7 @@ const RectSprite: React.FC<{
         onTransformEnd={() => {
           // 缩放用于更方便修改比例
           const node = shape.current;
+
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
 

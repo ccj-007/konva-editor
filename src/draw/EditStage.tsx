@@ -1,30 +1,19 @@
 import Konva from 'konva';
-import React, { MutableRefObject, useRef, useState } from 'react';
+import React, { MutableRefObject, useRef, useState, useEffect } from 'react';
 import { Stage, Layer } from 'react-konva';
-import { ShapeProps } from './types/sprite';
 import EditRectangle from './EditRectangle';
 import Marquee from './Marquee';
+import SmartAlignment from './SmartAlignment';
+
 import {
-  createRectSprite,
-  createCircleSprite,
   createSpriteMap,
 } from './createSpriteObj';
 import _ from 'lodash';
-import useStore from './store';
-const initialSprites: ShapeProps[] = [
-  createRectSprite({
-    width: 100,
-    height: 100,
-  }),
-  createCircleSprite({
-    radius: 100,
-  }),
-];
+import useStore from '../store';
 
 const EditStage: React.FC = () => {
-  const { setStage, setTarget, setDrawSpriteType, drawSpriteType } = useStore();
+  const { setStage, setDrawSpriteType, setSelects, selects, drawSpriteType, setNodes, nodes, setLayer, sprites, setSprites } = useStore();
 
-  const [sprites, setSprites] = useState<ShapeProps[]>(initialSprites);
   const [drawing, setDrawing] = useState<boolean>(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [selObj, setSelObj] = useState({ x: 0, y: 0, width: 0, height: 0 });
@@ -32,14 +21,23 @@ const EditStage: React.FC = () => {
   const stage = useRef() as MutableRefObject<Konva.Stage>;
   const layer = useRef() as MutableRefObject<Konva.Layer>;
   const [point, setPoint] = useState({ x1: 0, y1: 0, x2: 0, y2: 0 });
-  const [selectes, setSelectes] = useState<Konva.Node[]>([]);
   const [isEmpty, setEmpty] = useState(false);
+
+  useEffect(() => {
+    const node: Konva.Node[] = []
+    sprites.forEach(sprite => {
+      const findNode = stage.current.findOne(`#${sprite.id}`)
+      if (findNode) node.push(findNode)
+    })
+    setNodes(node)
+  }, [sprites])
+
 
   const checkDeselect = (e: Konva.KonvaPointerEvent) => {
     // 判断是否点击舞台的空白区域
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
-      setSelectes([]);
+      setSelects([]);
     }
     setEmpty(clickedOnEmpty);
   };
@@ -50,7 +48,6 @@ const EditStage: React.FC = () => {
     // 处理点击空白区域
     checkDeselect(e);
     setDrawing(true);
-    setTarget(e.target);
 
     // 绘制状态
     if (drawSpriteType) {
@@ -62,7 +59,7 @@ const EditStage: React.FC = () => {
       setSprites([...sprites, newSprite]);
 
       setTimeout(() => {
-        setSelectes(stage.current.find(`#${newSprite.id}`));
+        setSelects(stage.current.find(`#${newSprite.id}`));
       }, 0);
     } // 生成选择框
     else if (isEmpty) {
@@ -121,16 +118,12 @@ const EditStage: React.FC = () => {
   const handleMouseUp = () => {
     if (marquee.current.visible() && isEmpty) {
       marquee.current.visible(false);
-      const nodes = [
-        ...stage.current.find('.RECT'),
-        ...stage.current.find('.CIRCLE'),
-      ];
+
       const box = marquee.current.getClientRect();
       const selectes = nodes.filter((shape) =>
         Konva.Util.haveIntersection(box, shape.getClientRect())
       ) as Konva.Node[];
-      console.log('selected', selectes);
-      setSelectes(selectes);
+      setSelects(selectes);
     }
 
     setDrawSpriteType('');
@@ -139,6 +132,7 @@ const EditStage: React.FC = () => {
 
   React.useEffect(() => {
     setStage(stage.current);
+    setLayer(layer.current)
   }, []);
 
   return (
@@ -153,25 +147,33 @@ const EditStage: React.FC = () => {
       <Layer ref={layer}>
         {sprites.map((rect, i) => (
           <EditRectangle
-            selectes={selectes}
+            selects={selects}
             key={i}
             shapeProps={rect}
             // 获取选中的id
             onSelect={() => {
               const node = stage.current.find(`#${rect.id}`) as Konva.Node[];
-              setSelectes(node);
+              console.log(node, rect.id);
+              setSelects(node);
             }}
             // 更新属性
             onChange={(newAttrs) => {
-              const updatedRects = sprites.map((r) =>
-                r.id === rect.id ? newAttrs : r
+              const updatedRects = sprites.map((r) => {
+                if (r.id === rect.id) {
+                  return { ...r, ...newAttrs }
+                } else {
+                  return r
+                }
+              }
               );
               setSprites(updatedRects);
             }}
           />
         ))}
-
+        {/* 选择框 */}
         <Marquee id='marquee' ref={marquee} {...selObj} />
+        {/* 智能对齐 */}
+        <SmartAlignment stage={stage} layer={layer} ></SmartAlignment>
       </Layer>
     </Stage>
   );

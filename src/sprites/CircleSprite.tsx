@@ -1,7 +1,7 @@
 import Konva from 'konva';
-import React, { Ref } from 'react';
+import React, { MutableRefObject, Ref } from 'react';
 import { Circle } from 'react-konva';
-import { ShapeProps } from './types';
+import { ShapeProps } from '../types/sprite';
 
 /**
  * 圆形精灵
@@ -11,7 +11,7 @@ const CircleSprite: React.FC<{
   onSelect: () => void;
   onChange: (newAttrs: ShapeProps) => void;
 }> = React.forwardRef(
-  ({ shapeProps, onSelect, onChange }, circle: Ref<Konva.Circle>) => {
+  ({ shapeProps, onSelect, onChange }, circle: MutableRefObject<Konva.Circle>) => {
     return (
       <Circle
         onClick={onSelect}
@@ -28,13 +28,17 @@ const CircleSprite: React.FC<{
         }}
         onTransformEnd={() => {
           const node = circle.current;
+          const scaleX = node.scaleX();
+
+          node.scaleX(1);
+          node.scaleY(1);
 
           onChange({
             ...shapeProps,
             x: node.x(),
             y: node.y(),
             // 设置最小半径, 防止过小
-            radius: Math.max(5, node.radius()),
+            radius: Math.max(5, node.radius() * scaleX),
           });
         }}
       />

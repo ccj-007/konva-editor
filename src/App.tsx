@@ -1,5 +1,5 @@
-import EditStage from './EditStage';
-import UI from './UI';
+import EditStage from './draw/EditStage';
+import UI from './ui/UI';
 
 const App: React.FC = () => {
   return (
