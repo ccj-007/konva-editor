@@ -44,6 +44,7 @@ const EditStage: React.FC = () => {
 
   const handleMouseDown = (e: Konva.KonvaPointerEvent) => {
     const { offsetX, offsetY } = e.evt;
+    console.log(offsetX);
 
     // 处理点击空白区域
     checkDeselect(e);
@@ -56,6 +57,7 @@ const EditStage: React.FC = () => {
         x: offsetX,
         y: offsetY,
       });
+
       setSprites([...sprites, newSprite]);
 
       setTimeout(() => {

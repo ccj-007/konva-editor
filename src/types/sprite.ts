@@ -1,6 +1,6 @@
-export type ShapeProps = RectSpriteProps | CircleSpriteProps | TextSpriteProps | GroupSpriteProps
+export type ShapeProps = RectSpriteProps | CircleSpriteProps | TextSpriteProps | GroupSpriteProps | CurveSpriteProps
 
-export type SpriteType = '' | 'RECT' | 'CIRCLE' | 'TEXT';
+export type SpriteType = '' | 'RECT' | 'CIRCLE' | 'TEXT' | 'CURVE';
 
 export type RectSpriteProps = {
   name: 'RECT';
@@ -34,11 +34,18 @@ export type TextSpriteProps = {
   fill?: string;
 };
 
+export type CurveSpriteProps = {
+  name: 'CURVE';
+  id: string;
+  points: number[]
+  stroke: string
+  strokeWidth: number
+};
+
 export type GroupSpriteProps = {
   name: 'GROUP'
   id: string
   x?: number;
   y?: number;
-  children: ShapeProps[],
-  childGroup: GroupSpriteProps
+  children: ShapeProps[]
 }

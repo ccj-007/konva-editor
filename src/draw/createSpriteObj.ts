@@ -1,4 +1,4 @@
-import { CircleSpriteProps, GroupSpriteProps, RectSpriteProps, TextSpriteProps } from '../types/sprite';
+import { CircleSpriteProps, CurveSpriteProps, GroupSpriteProps, RectSpriteProps, TextSpriteProps } from '../types/sprite';
 import { v4 as uuidv4 } from 'uuid';
 
 export const createRectSprite = (params?: Partial<RectSpriteProps>) => {
@@ -46,6 +46,19 @@ export const createTextSprite = (params?: Partial<TextSpriteProps>) => {
   );
 };
 
+export const createCurveSprite = (params?: Partial<CurveSpriteProps>) => {
+  return Object.assign(
+    {
+      name: 'CURVE',
+      id: uuidv4(),
+      points: [0, 0, 100, 100],
+      stroke: 'blue',
+      strokeWidth: 2,
+    },
+    params
+  );
+};
+
 export const createGroupSprite = (params?: Partial<GroupSpriteProps>) => {
   return Object.assign(
     {
@@ -76,5 +89,6 @@ export const createSpriteMap = {
   RECT: createRectSprite,
   CIRCLE: createCircleSprite,
   TEXT: createTextSprite,
-  GROUP: createGroupSprite
+  GROUP: createGroupSprite,
+  CURVE: createCurveSprite
 };

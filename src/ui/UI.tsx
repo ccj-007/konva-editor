@@ -8,6 +8,7 @@ import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import RectangleIcon from '@mui/icons-material/Rectangle';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
+import RouteIcon from '@mui/icons-material/Route';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import TitleIcon from '@mui/icons-material/Title';
 import CropSquareIcon from '@mui/icons-material/CropSquare';
@@ -298,6 +299,9 @@ export default function UI() {
           </ToggleButton>
           <ToggleButton value='CIRCLE' aria-label='circle'>
             <PanoramaFishEyeIcon />
+          </ToggleButton>
+          <ToggleButton value='CURVE' aria-label='curve'>
+            <RouteIcon />
           </ToggleButton>
           <ToggleButton value='' aria-label='select'>
             <NearMeIcon />

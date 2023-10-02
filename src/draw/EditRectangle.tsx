@@ -6,6 +6,7 @@ import RectSprite from '../sprites/RectSprite';
 import CircleSprite from '../sprites/CircleSprite';
 import TextSprite from '../sprites/TextSprite';
 import GroupSprite from '../sprites/GroupSprite';
+import CurveSprite from '../sprites/CurveSprite';
 /**
  * 编辑框
  */
@@ -65,9 +66,16 @@ const EditRectangle: React.FC<{
           ref={shape}
         />
       )}
+      {
+        shapeProps.name === 'CURVE' && <CurveSprite onSelect={onSelect}
+          onChange={onChange}
+          shapeProps={shapeProps}
+          tr={tr}
+          ref={shape} />
+      }
       {/* 不同控制逻辑的变换框 */}
       {
-        ['CIRCLE', 'RECT', 'GROUP'].includes(shapeProps.name) && <Transformer
+        ['CIRCLE', 'RECT', 'GROUP', 'CURVE'].includes(shapeProps.name) && <Transformer
           ref={tr}
           id={`tr${shapeProps.id}`}
           boundBoxFunc={(oldBox, newBox) => {

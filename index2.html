@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/konva@9.2.1/konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Modify Curves with Anchor Points Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script>
+
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        // 构建锚点
+        function buildAnchor(x, y, item, index) {
+            var anchor = new Konva.Circle({
+                x: x,
+                y: y,
+                radius: 20,
+                stroke: '#666',
+                fill: '#ddd',
+                strokeWidth: 2,
+                draggable: true,
+            });
+            layer.add(anchor);
+
+            anchor.on('mouseover', function () {
+                document.body.style.cursor = 'pointer';
+                this.strokeWidth(4);
+            });
+            anchor.on('mouseout', function () {
+                document.body.style.cursor = 'default';
+                this.strokeWidth(2);
+            });
+
+            anchor.on('dragmove', function () {
+                updateDottedLines(item.controll, index);
+            });
+
+            return anchor;
+        }
+
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height,
+        });
+
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        // 拖拽操控点更新线段
+        function updateDottedLines(b, index) {
+
+            var bezierLinePath = layer.findOne(`#be${index}`);
+
+            bezierLinePath.points([
+                b.start.x(),
+                b.start.y(),
+                b.control1.x(),
+                b.control1.y(),
+                b.control2.x(),
+                b.control2.y(),
+                b.end.x(),
+                b.end.y(),
+            ]);
+        }
+
+
+
+        function getControlPoints(item) {
+            const { x, y, x2, y2 } = item
+            const dx = (x2 - x) / 3;
+            const dy = (y2 - y) / 3;
+            const midPoint = {
+                x: (x + x2) / 2,
+                y: (y + y2) / 2,
+            };
+            const controlPoint1 = {
+                x: (midPoint.x + x) / 2,
+                y: (midPoint.y + y) / 2,
+            };
+
+            const controlPoint2 = {
+                x: (midPoint.x + x2) / 2,
+                y: (midPoint.y + y2) / 2,
+            };
+            item.c1x = +controlPoint1.x.toFixed(1)
+            item.c1y = +controlPoint1.y.toFixed(1)
+            item.c2x = +controlPoint2.x.toFixed(1)
+            item.c2x = +controlPoint2.y.toFixed(1)
+        }
+
+        var curveList = [
+            {
+                x: 280,
+                y: 20,
+                x2: 300,
+                y2: 150,
+                c1x: 0,
+                c1y: 0,
+                c2x: 0,
+                c2y: 0
+            },
+            {
+                x: 300,
+                y: 150,
+                x2: 400,
+                y2: 200,
+                c1x: 0,
+                c1y: 0,
+                c2x: 0,
+                c2y: 0
+            }
+        ]
+        curveList.forEach((item, index) => {
+            getControlPoints(item)
+            const bezier = {
+                start: buildAnchor(item.x, item.y, item, index),
+                control1: buildAnchor(item.c1x, item.c1y, item, index),
+                control2: buildAnchor(item.c2x, item.c2y, item, index),
+                end: buildAnchor(item.x2, item.y2, item, index),
+            };
+            item.controll = bezier
+            // 曲线
+            var bezierLine = new Konva.Shape({
+                stroke: 'blue',
+                strokeWidth: 5,
+                sceneFunc: (ctx, shape) => {
+                    ctx.beginPath();
+                    ctx.moveTo(bezier.start.x(), bezier.start.y());
+                    ctx.bezierCurveTo(
+                        bezier.control1.x(),
+                        bezier.control1.y(),
+                        bezier.control2.x(),
+                        bezier.control2.y(),
+                        bezier.end.x(),
+                        bezier.end.y()
+                    );
+                    ctx.fillStrokeShape(shape);
+                },
+            });
+            layer.add(bezierLine);
+
+            // 操控点连线
+            var bezierLinePath = new Konva.Line({
+                dash: [10, 10, 0, 10],
+                strokeWidth: 3,
+                stroke: 'black',
+                lineCap: 'round',
+                id: `be${index}`,
+                opacity: 0.3,
+                points: [0, 0],
+            });
+            layer.add(bezierLinePath);
+
+            updateDottedLines(bezier, index);
+        });
+
+    </script>
+</body>
+
+</html>

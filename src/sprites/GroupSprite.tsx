@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import React, { MutableRefObject, Ref } from 'react';
+import React, { MutableRefObject } from 'react';
 import { Group, Rect, Text, Circle } from 'react-konva';
 import { GroupSpriteProps, ShapeProps } from '../types/sprite';
 import useStore from '../store';
