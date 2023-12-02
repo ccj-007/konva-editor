@@ -1,4 +1,10 @@
-import { CircleSpriteProps, CurveSpriteProps, GroupSpriteProps, RectSpriteProps, TextSpriteProps } from '../types/sprite';
+import {
+  CircleSpriteProps,
+  CurveSpriteProps,
+  GroupSpriteProps,
+  RectSpriteProps,
+  TextSpriteProps,
+} from '../types/sprite';
 import { v4 as uuidv4 } from 'uuid';
 
 export const createRectSprite = (params?: Partial<RectSpriteProps>) => {
@@ -77,9 +83,9 @@ export const createGroupSprite = (params?: Partial<GroupSpriteProps>) => {
           radius: 50,
           x: 800,
           y: 250,
-          fill: 'blue'
-        })
-      ]
+          fill: 'blue',
+        }),
+      ],
     },
     params
   );
@@ -90,5 +96,5 @@ export const createSpriteMap = {
   CIRCLE: createCircleSprite,
   TEXT: createTextSprite,
   GROUP: createGroupSprite,
-  CURVE: createCurveSprite
+  CURVE: createCurveSprite,
 };
